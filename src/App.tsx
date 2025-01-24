@@ -1,11 +1,10 @@
 import './App.css'
+import Root from './components/Leyout/Root'
 
 function App() {
 
   return (
-<div>
-  <h1 className='text-2xl'>habib</h1>
-</div>
+<Root />
   )
 }
 
