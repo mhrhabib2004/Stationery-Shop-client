@@ -1,11 +1,5 @@
-interface BlogPost {
-    id: number;
-    title: string;
-    description: string;
-    image: string;
-    link: string;
-  }
-  
+import { BlogPost } from "../../Types/BlogPost.type";
+
   const blogPosts: BlogPost[] = [
     {
       id: 1,
