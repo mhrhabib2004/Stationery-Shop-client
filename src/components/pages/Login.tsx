@@ -32,7 +32,7 @@ export default function Login() {
               className="space-y-6"
               onSubmit={methods.handleSubmit(onSubmit)}
             >
-              <Sinput type="text" name="username" label="Username" />
+              <Sinput type="text" name="email" label="Email" />
               <Sinput type="password" name="password" label="Password" />
               <button
                 type="submit"

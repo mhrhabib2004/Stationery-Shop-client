@@ -25,7 +25,7 @@ export default function Sinput({ type, name, label }: TInputProps) {
             {...field}
             type={type}
             id={name}
-            className="w-full h-12 border border-gray-800 px-3 rounded-lg"
+            className="w-full h-10 border border-gray-800 px-3 rounded-lg"
           />
         )}
       />
