@@ -3,7 +3,7 @@ import { FormProvider, useForm } from "react-hook-form";
 import Sinput from "../From/Sinput";
 
 export default function Login() {
-  const methods = useForm(); // React Hook Form এর কনফিগারেশন
+  const methods = useForm(); 
   const onSubmit = (data: any) => {
     console.log("Form Data:", data);
   };

@@ -7,9 +7,9 @@ type TInputProps = {
 };
 
 export default function Sinput({ type, name, label }: TInputProps) {
-  const methods = useFormContext(); // useFormContext() ব্যবহার করছি
+  const methods = useFormContext(); 
   if (!methods) {
-    throw new Error("Sinput must be used within a FormProvider."); // নিশ্চিত করা যে এটি FormProvider এর মধ্যে রয়েছে
+    throw new Error("Sinput must be used within a FormProvider."); 
   }
 
   const { control } = methods;
