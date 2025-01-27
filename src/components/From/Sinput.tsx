@@ -1,28 +1,29 @@
-// import { Controller } from "react-hook-form";
-// import { Form } from "react-router-dom";
+import { Controller, useFormContext } from "react-hook-form";
 
-// type TInputProps = {
-//     type: string;
-//     name: string;
-//     label?: string;
-//   };
-  
-// export default function Sinput({ type, name, label }: TInputProps) {
-//   return (
-//     <div >
-     
-//       {/* <Controller
-//         name={name}
-        
-//         // render={({ field }) => <Form.Item label={label}><Input {...field} type={type} id={name} /></Form.Item> }
-//       /> */}
-//     </div>
-//   )
-// }
+type TInputProps = {
+  type: string;
+  name: string;
+  label?: string;
+};
 
+export default function Sinput({ type, name, label }: TInputProps) {
+  const { control } = useFormContext();
 
-export default function Sinput() {
   return (
-    <div>Sinput</div>
-  )
+    <div>
+      {label && <label htmlFor={name} className="block mb-2 font-medium">{label}</label>}
+      <Controller
+        name={name}
+        control={control}
+        render={({ field }) => (
+          <input
+            {...field}
+            type={type}
+            id={name}
+            className="border rounded-md p-2 w-full"
+          />
+        )}
+      />
+    </div>
+  );
 }
