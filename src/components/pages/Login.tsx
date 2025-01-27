@@ -47,7 +47,7 @@ export default function Login() {
           <div className="mt-4 text-center text-sm text-gray-600">
             <span>Don't have an account?</span>{" "}
             <a
-              href="#"
+              href="register"
               className="text-blue-500 font-semibold hover:underline"
             >
               Sign up here
