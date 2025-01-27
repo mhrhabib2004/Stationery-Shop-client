@@ -7,10 +7,15 @@ type TInputProps = {
 };
 
 export default function Sinput({ type, name, label }: TInputProps) {
-  const { control } = useFormContext();
+  const methods = useFormContext(); // useFormContext() ব্যবহার করছি
+  if (!methods) {
+    throw new Error("Sinput must be used within a FormProvider."); // নিশ্চিত করা যে এটি FormProvider এর মধ্যে রয়েছে
+  }
+
+  const { control } = methods;
 
   return (
-    <div>
+    <div className="mb-4">
       {label && <label htmlFor={name} className="block mb-2 font-medium">{label}</label>}
       <Controller
         name={name}
@@ -20,7 +25,7 @@ export default function Sinput({ type, name, label }: TInputProps) {
             {...field}
             type={type}
             id={name}
-            className="border rounded-md p-2 w-full"
+            className="w-full h-12 border border-gray-800 px-3 rounded-lg"
           />
         )}
       />
