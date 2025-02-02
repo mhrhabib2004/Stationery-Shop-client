@@ -1,11 +1,36 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { FormProvider, useForm } from "react-hook-form";
 import Sinput from "../From/Sinput";
+import { useLoginMutation } from "../../redux/features/auth/authApi";
+import { useAppDispatch } from "../../redux/hooks";
+import { setUser } from "../../redux/features/auth/authSlice";
+import { verifyToken } from "../utils/verifyToken";
 
 export default function Login() {
-  const methods = useForm(); 
-  const onSubmit = (data: any) => {
-    console.log("Form Data:", data);
+  const dispaatch = useAppDispatch();
+  const methods = useForm({
+    defaultValues:{
+        email:"habib@ha.com",
+        password:"habib1"
+    
+      
+    }
+  }); 
+  const [login,{error}]=useLoginMutation();
+
+  // console.log('data=>',data);
+  // console.log('error=>',error);
+
+  const onSubmit = async (data: any) => {
+    const userInfo = {
+      email : data.email,
+      password:data.password,
+    }
+const res = await login(userInfo).unwrap();
+const user = verifyToken(res.data.token)
+console.log(user);
+dispaatch(setUser({user:user, token : res.data.token}))
+    console.log("Form Data:", res);
   };
 
   return (
