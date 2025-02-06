@@ -4,6 +4,7 @@ import { useSelector } from "react-redux";
 import { Navigate, useLocation } from "react-router-dom";
 import { useState, useEffect } from "react"; 
 import { RootState } from "../redux/store";
+import LoadingProgress from "../components/pages/loadingProgress";
 
 
 interface TChildren {
