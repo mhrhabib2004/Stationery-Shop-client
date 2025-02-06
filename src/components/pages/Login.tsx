@@ -5,6 +5,8 @@ import { useLoginMutation } from "../../redux/features/auth/authApi";
 import { useAppDispatch } from "../../redux/hooks";
 import { setUser } from "../../redux/features/auth/authSlice";
 import { verifyToken } from "../utils/verifyToken";
+import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 
 export default function Login() {
   const dispaatch = useAppDispatch();
@@ -16,21 +18,28 @@ export default function Login() {
       
     }
   }); 
+  const navigate = useNavigate();
   const [login,{error}]=useLoginMutation();
 
   // console.log('data=>',data);
   // console.log('error=>',error);
 
   const onSubmit = async (data: any) => {
+   try {
     const userInfo = {
       email : data.email,
       password:data.password,
     }
 const res = await login(userInfo).unwrap();
 const user = verifyToken(res.data.token)
-console.log(user); 
+// console.log(user); 
 dispaatch(setUser({user:user, token : res.data.token}))
-    console.log("Form Data:", res);
+    // console.log("Form Data:", res);
+    toast.success("logged in ");
+    navigate("/")
+   } catch (error) {
+    toast.error("someting went wron")
+   }
   };
 
   return (
