@@ -28,7 +28,7 @@ export default function Login() {
     }
 const res = await login(userInfo).unwrap();
 const user = verifyToken(res.data.token)
-console.log(user);
+console.log(user); 
 dispaatch(setUser({user:user, token : res.data.token}))
     console.log("Form Data:", res);
   };
