@@ -38,7 +38,7 @@ const handleLogout = () => {
               </div>
               <a
                 className="flex flex-row items-center justify-center lg:justify-start rounded-md h-12 focus:outline-none pr-3.5 lg:pr-6 font-semibold text-gray-500 hover:text-primary-400 cursor-pointer"
-                href="/app"
+                href="/"
               >
                 <span className="inline-flex justify-center items-center ml-3.5">
                   <RiListView size={20} />
