@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { FormProvider, useForm } from "react-hook-form";
 import Sinput from "../From/Sinput";
@@ -19,7 +20,7 @@ export default function Login() {
     }
   }); 
   const navigate = useNavigate();
-  const [login,{error}]=useLoginMutation();
+  const [login]=useLoginMutation();
 
   // console.log('data=>',data);
   // console.log('error=>',error);
