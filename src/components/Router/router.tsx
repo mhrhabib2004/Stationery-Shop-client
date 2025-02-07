@@ -5,11 +5,14 @@ import Register from "../pages/Register";
 import About from "../pages/About";
 import Home from "../Home/Home/Home";
 import DashbordLeyout from "../Leyout/DashbordLeyout";
+import NotFound from "../Error/NotFound";
+import PrivateRoute from "../../PrivateRoute/PrivateRoute";
 
 const router = createBrowserRouter([
     {
       path: "/",
       element: <App />,
+      errorElement:<NotFound />,
       children:[
         {
             index:true,
@@ -33,7 +36,8 @@ const router = createBrowserRouter([
     },
     {
       path: "/dashbord",
-      element:<DashbordLeyout />,
+      element:<PrivateRoute ><DashbordLeyout /> </PrivateRoute>,
+      errorElement:<NotFound />,
       children:[
         {}
       ]
