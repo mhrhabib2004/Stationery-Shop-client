@@ -5,18 +5,17 @@ import { RootState } from "../redux/store";
 import LoadingProgress from "../components/pages/loadingProgress";
 
 interface TChildren {
-  children: JSX.Element;
-}
+  children: React.ReactNode;}
 
 const PrivateRoute: React.FC<TChildren> = ({ children }) => {
   const user = useSelector((state: RootState) => state.auth.user);
-  const [loading, setLoading] = useState<boolean>(true); // Explicitly typing the loading state
+  const [loading, setLoading] = useState<boolean>(true);
   const location = useLocation();
 
   useEffect(() => {
     const timer = setTimeout(() => {
       setLoading(false);
-    }, 500); 
+    }, 500);
 
     return () => clearTimeout(timer);
   }, [user]);
@@ -26,7 +25,7 @@ const PrivateRoute: React.FC<TChildren> = ({ children }) => {
   }
 
   if (user) {
-    return <>{children}</>;
+    return <>{children}</>; // Render the children passed to this component
   }
 
   return <Navigate to="/login" state={{ from: location }} replace />;
