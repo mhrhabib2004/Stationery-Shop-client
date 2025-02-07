@@ -1,6 +1,4 @@
 
-
-
 const LoadingProgress = () => {
 
     return (
