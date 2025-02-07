@@ -7,6 +7,8 @@ import Home from "../Home/Home/Home";
 import DashbordLeyout from "../Leyout/DashbordLeyout";
 import NotFound from "../Error/NotFound";
 import PrivateRoute from "../../PrivateRoute/PrivateRoute";
+import ViewOrders from "../Dashbord/userDashbord/ViewOrders";
+import ManageProfile from "../Dashbord/userDashbord/ManageProfile";
 
 const router = createBrowserRouter([
     {
@@ -35,11 +37,19 @@ const router = createBrowserRouter([
      
     },
     {
-      path: "/dashbord",
+      path: "/dashboard",
       element:<PrivateRoute ><DashbordLeyout /> </PrivateRoute>,
       errorElement:<NotFound />,
       children:[
-        {}
+        {
+          path:'orders',
+          index:true,
+          element:<ViewOrders />
+        },
+        {
+          path:"manage-profile",
+          element:<ManageProfile />
+        }
       ]
     }                     
   ]);
