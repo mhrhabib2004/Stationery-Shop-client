@@ -1,8 +1,18 @@
 import { FaSignOutAlt } from "react-icons/fa";
 import { MdManageAccounts } from "react-icons/md";
 import { RiListView } from "react-icons/ri";
+import { useAppDispatch } from "../../redux/hooks";
+import { logout } from "../../redux/features/auth/authSlice";
+import { useNavigate } from "react-router-dom";
 
 export default function UserDasbord() {
+  const navigate = useNavigate(); 
+const dispatch = useAppDispatch();
+
+const handleLogout = () => {
+  dispatch(logout());
+  navigate('/'); 
+};
   return (
     <div className="w-dvw h-dvh bg-gray-200 grid grid-cols-6">
       {/* Sidebar */}
@@ -57,9 +67,9 @@ export default function UserDasbord() {
               <span className="inline-flex justify-center items-center ml-3.5">
                 <FaSignOutAlt size={20} />
               </span>
-              <span className="ml-2 text-sm tracking-wide truncate capitalize hidden lg:block">
+              <a onClick={handleLogout} className="ml-2 text-sm tracking-wide truncate capitalize hidden lg:block">
                 Logout
-              </span>
+              </a>
             </div>
           </div>
         </div>
