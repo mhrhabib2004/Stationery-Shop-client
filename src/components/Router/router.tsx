@@ -9,6 +9,7 @@ import NotFound from "../Error/NotFound";
 import PrivateRoute from "../../PrivateRoute/PrivateRoute";
 import ViewOrders from "../Dashbord/userDashbord/ViewOrders";
 import ManageProfile from "../Dashbord/userDashbord/ManageProfile";
+import Manageusers from "../Dashbord/AdminDashbord/Manageusers";
 
 const router = createBrowserRouter([
     {
@@ -42,13 +43,19 @@ const router = createBrowserRouter([
       errorElement:<NotFound />,
       children:[
         {
-          path:'orders',
+          path:'view-orders',
           index:true,
           element:<ViewOrders />
         },
         {
           path:"manage-profile",
           element:<ManageProfile />
+        },
+        {
+          path:'manage-users',
+          index:true,
+          element:<Manageusers />
+
         }
       ]
     }                     
