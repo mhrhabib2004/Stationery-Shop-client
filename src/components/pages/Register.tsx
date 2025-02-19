@@ -1,11 +1,49 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { FormProvider, useForm } from "react-hook-form";
+import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
 import Sinput from "../From/Sinput";
+import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
+import { useAddUserMutation } from "../../redux/features/user/userMenagement";
+
+type Inputs = {
+  name: string;
+  email: string;
+  password: string;
+};
 
 export default function Register() {
-  const methods = useForm();
-  const onSubmit = (data: any) => {
-    console.log("Form Data:", data);
+  const methods = useForm<Inputs>();
+  const [addUser, { isLoading }] = useAddUserMutation();
+  const navigate = useNavigate();
+
+  const onSubmit: SubmitHandler<Inputs> = async (data) => {
+    const toastId = toast.loading("Creating account...");
+
+    const userData = {
+      name: data.name,
+      email: data.email,
+      password: data.password
+
+    };
+
+    console.log(userData)
+
+    try {
+      const res = await addUser(userData).unwrap(); // Use unwrap() to handle the response
+
+      if (res.success) {
+        toast.success("Account created successfully!", { id: toastId });
+
+        // Navigate to the login page
+        setTimeout(() => {
+          navigate("/login");
+        }, 700);
+      } else {
+        toast.error(res.message || "Failed to create account", { id: toastId });
+      }
+    } catch (err ) {
+      console.error("Registration error:", err);
+       toast.error(err.message || "Something went wrong. Please try again.", { id: toastId });
+    }
   };
 
   return (
@@ -33,14 +71,16 @@ export default function Register() {
               className="space-y-4 sm:space-y-6"
               onSubmit={methods.handleSubmit(onSubmit)}
             >
-              <Sinput type="text" name="name" label="Full Name" />
-              <Sinput type="email" name="email" label="Email Address" />
-              <Sinput type="password" name="password" label="Password" />
+              <Sinput type="text" name="name" label="Full Name"  />
+              <Sinput type="email" name="email" label="Email Address"  />
+              <Sinput type="password" name="password" label="Password"  />
+            
               <button
                 type="submit"
-               className="w-full h-12 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-semibold rounded-lg shadow-lg transition duration-300"
+                className="w-full h-12 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-semibold rounded-lg shadow-lg transition duration-300"
+                disabled={isLoading}
               >
-                Register
+                {isLoading ? "Registering..." : "Register"}
               </button>
             </form>
           </FormProvider>
