@@ -1,5 +1,5 @@
 import { useAppSelector } from "../../redux/hooks";
-import Admindasbord from "../Dashbord/AdminDasbord";
+import Admindasbord from "../Dashbord/AdminDashbord/AdminDasbord";
 import UserDasbord from "../Dashbord/userDashbord/UserDasbord";
 
 
