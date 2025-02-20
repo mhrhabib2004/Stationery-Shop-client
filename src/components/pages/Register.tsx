@@ -25,7 +25,7 @@ export default function Register() {
 
     };
 
-    console.log(userData)
+    // console.log(userData)
 
     try {
       const res = await addUser(userData).unwrap(); // Use unwrap() to handle the response

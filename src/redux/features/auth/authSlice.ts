@@ -4,6 +4,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import { RootState } from "../../store";
 
 export type TUser = {
+    userId(userId: any, cartItems: import("../../../components/Types/productsManagment").TProduct[]): unknown;
     email: string;
     role: string;
     iat: number;

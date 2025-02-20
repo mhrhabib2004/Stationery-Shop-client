@@ -10,6 +10,7 @@ import PrivateRoute from "../../PrivateRoute/PrivateRoute";
 import ViewOrders from "../Dashbord/userDashbord/ViewOrders";
 import ManageProfile from "../Dashbord/userDashbord/ManageProfile";
 import Manageusers from "../Dashbord/AdminDashbord/Manageusers";
+import Allproducts from "../Products/allproducts";
 
 const router = createBrowserRouter([
     {
@@ -34,6 +35,10 @@ const router = createBrowserRouter([
             path:"about",
             element:<About />
         },
+        {
+          path:"all-products",
+          element:<Allproducts />
+        }
       ],
      
     },
