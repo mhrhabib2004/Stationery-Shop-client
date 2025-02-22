@@ -6,6 +6,7 @@ export enum Category  {
     Technology = "Technology",
   }
 export interface TProduct {
+    [x: string]: any;
     userId:string;
     name: string;
     brand: string;
