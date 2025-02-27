@@ -1,23 +1,24 @@
-import { useState, useEffect } from "react";
-import { useForm, FormProvider, SubmitHandler, FieldValues } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
+import { FieldValues, SubmitHandler, useForm, FormProvider } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Category, TProduct } from "../../Types/productsManagment";
+import { useEffect, useState } from "react";
+import { Category } from "./CreatProduct";
+import { TProduct } from "../../Types/productsManagment";
 import { useUpdateProductMutation } from "../../../redux/features/productManagement/productManagementApi";
-import Sinput from "../../From/Sinput";
 import LoadingProgress from "../../pages/loadingProgress";
+import Sinput from "../../From/Sinput";
 
 // Define the schema for validation
 const productSchema = z.object({
   name: z.string().min(1, "Name is required"),
   description: z.string().min(1, "Description is required"),
   brand: z.string().min(1, "Brand is required"),
-  price: z.number().min(1, "Price must be at least 1"),
+  price: z.preprocess((val) => Number(val), z.number().min(1, "Price must be at least 1")),
   category: z.nativeEnum(Category, {
     message: "Invalid category selected",
   }),
-  quantity: z.number().min(1, "Quantity must be at least 1"),
+  quantity: z.preprocess((val) => Number(val), z.number().min(1, "Quantity must be at least 1")),
   image: z.string().url("Invalid URL"),
   inStock: z.boolean().default(true),
 });
@@ -29,30 +30,37 @@ interface TTitle {
 
 const ProductModalUpdate = ({ title, product }: TTitle) => {
   const [updateProduct] = useUpdateProductMutation();
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const methods = useForm({
     resolver: zodResolver(productSchema),
     mode: "onBlur",
   });
 
-  const { handleSubmit, reset, setValue, formState: { errors, isSubmitting } } = methods;
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    watch,
+    reset,
+    formState: { errors },
+  } = methods;
 
-  // Set form values when the modal opens
+  // Watch selected category
+  const selectedCategory = watch("category");
+
+  // Pre-fill the form with product data when the modal opens
   useEffect(() => {
-    if (isModalOpen && product) {
+    if (isDialogOpen && product) {
       setValue("name", product.name);
       setValue("description", product.description);
       setValue("brand", product.brand);
-      setValue("price", Number(product.price)); // Convert to number
-      setValue("category", product.category);
-      setValue("quantity", Number(product.quantity)); // Convert to number
+      setValue("price", Number(product.price)); // Ensure price is a number
+      setValue("quantity", Number(product.quantity)); // Ensure quantity is a number
       setValue("image", product.image);
-      setValue("inStock", product.inStock);
-      setImagePreview(product.image);
+      setValue("category", product.category);
     }
-  }, [isModalOpen, product, setValue]);
+  }, [isDialogOpen, product, setValue]);
 
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
     const toastId = toast.loading(<LoadingProgress />);
@@ -65,69 +73,51 @@ const ProductModalUpdate = ({ title, product }: TTitle) => {
 
       const productData = {
         ...data,
-        price: Number(data.price),
-        quantity: Number(data.quantity),
+        price: Number(data.price), // Convert price to number
+        quantity: Number(data.quantity), // Convert quantity to number
       };
 
-      console.log(data);
+      const res = await updateProduct({
+        productId: product._id,
+        body: productData,
+      }).unwrap();
 
-      await updateProduct({ productId: product._id, body: productData }).unwrap();
-      toast.success("Product updated successfully", { id: toastId });
-      reset();
-      setIsModalOpen(false);
+      if (res.error) {
+        toast.error(res.error.data.message, { id: toastId });
+      } else {
+        toast.success("Product updated successfully", { id: toastId });
+        reset();
+        setIsDialogOpen(false);
+      }
     } catch (err) {
       toast.error("Something went wrong", { id: toastId });
     }
   };
 
-  const handleImageUrlChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const url = e.target.value;
-    setImagePreview(url);
-    setValue("image", url);
-  };
-
   return (
     <div>
-      {/* Modal Trigger */}
+      {/* Modal Trigger Button */}
       <button
-        onClick={() => setIsModalOpen(true)}
-        className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700"
+        onClick={() => setIsDialogOpen(true)}
+        className="px-6 py-3 text-lg font-semibold text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition-all duration-300"
       >
         {title}
       </button>
 
       {/* Modal */}
-      {isModalOpen && (
+      {isDialogOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white p-6 rounded-lg w-full max-w-2xl mx-4 shadow-2xl">
+          <div className="bg-white rounded-lg shadow-lg w-full max-w-3xl p-6 overflow-y-auto max-h-[90vh]">
             {/* Modal Header */}
-            <div className="flex justify-between items-center mb-4">
-              <h2 className="text-xl font-semibold text-gray-800">Update Product</h2>
-              {/* Close Button */}
-              <button
-                onClick={() => setIsModalOpen(false)}
-                className="text-gray-500 hover:text-gray-700"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-6 w-6"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M6 18L18 6M6 6l12 12"
-                  />
-                </svg>
-              </button>
+            <div className="text-center">
+              <h2 className="text-3xl font-bold text-gray-800">
+                Update Product
+              </h2>
             </div>
 
             {/* Form */}
             <FormProvider {...methods}>
-              <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 max-h-[70vh] overflow-y-auto pr-4">
+              <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 mt-6">
                 {/* Product Name */}
                 <Sinput
                   type="text"
@@ -144,79 +134,73 @@ const ProductModalUpdate = ({ title, product }: TTitle) => {
                   placeholder="Enter product description"
                 />
 
-                {/* Brand */}
-                <Sinput
-                  type="text"
-                  name="brand"
-                  label="Brand"
-                  placeholder="Enter product brand"
-                />
-
-                {/* Price */}
-                <Sinput
-                  type="number"
-                  name="price"
-                  label="Price"
-                  placeholder="Enter product price"
-                />
-
-                {/* Image URL */}
-                <div className="space-y-2">
-                  <label className="block text-sm font-medium text-gray-700">Product Image URL</label>
-                  <input
-                    type="text"
-                    {...methods.register("image")}
-                    onChange={handleImageUrlChange}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  />
-                  {imagePreview && (
-                    <div className="mt-2">
-                      <img src={imagePreview} alt="Product Preview" className="w-32 h-32 object-cover rounded" />
-                    </div>
-                  )}
-                  {errors.image && (
-                    <p className="text-sm text-red-500">{errors.image.message as string}</p>
-                  )}
-                </div>
-
-                {/* Quantity */}
-                <Sinput
-                  type="number"
-                  name="quantity"
-                  label="Quantity"
-                  placeholder="Enter product quantity"
-                />
-
-                {/* Category Selector */}
-                <div className="space-y-2">
-                  <label className="block text-sm font-medium text-gray-700">Category</label>
+                {/* Category Selection */}
+                <div className="flex flex-col space-y-2">
+                  <label className="text-lg text-gray-700">Category</label>
                   <select
-                    {...methods.register("category")}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    {...register("category")}
+                    className="w-full border-2 border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
                   >
+                    <option value="">Select Category</option>
                     {Object.values(Category).map((category) => (
                       <option key={category} value={category}>
                         {category}
                       </option>
                     ))}
                   </select>
+
                   {errors.category && (
-                    <p className="text-sm text-red-500">{errors.category.message as string}</p>
+                    <p className="mt-1 text-sm text-red-500">
+                      {errors.category.message?.toString()}
+                    </p>
                   )}
                 </div>
 
+                {/* Price */}
+                <Sinput 
+                  type="number"
+                  name="price"
+                  label="Price"
+                  placeholder="Enter product price"
+                  step="0.01"
+                />
+
+                {/* Quantity */}
+                <Sinput
+                  type="number"
+                  name="quantity"
+                  label="Quantity"
+                  placeholder="Enter quantity"
+                  step="1"
+                />
+
+                {/* Product Image Link */}
+                <Sinput
+                  type="text"
+                  name="image"
+                  label="Product Image Link"
+                  placeholder="Enter product image URL"
+                />
+
                 {/* Submit Button */}
-                <div className="mt-6">
+                <div className="mt-4">
                   <button
                     type="submit"
-                    disabled={isSubmitting}
-                    className="w-full px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200"
                   >
-                    {isSubmitting ? "Updating..." : "Update Product"}
+                    Update Product
                   </button>
                 </div>
               </form>
             </FormProvider>
+
+            {/* Close Button */}
+            <button
+              onClick={() => setIsDialogOpen(false)}
+              className="absolute top-4 right-4 p-2 text-gray-600 hover:text-gray-800"
+            >
+              &times;
+            </button>
           </div>
         </div>
       )}

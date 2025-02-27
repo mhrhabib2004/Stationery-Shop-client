@@ -9,11 +9,12 @@ import NotFound from "../Error/NotFound";
 import PrivateRoute from "../../PrivateRoute/PrivateRoute";
 import ViewOrders from "../Dashbord/userDashbord/ViewOrders";
 import ManageProfile from "../Dashbord/userDashbord/ManageProfile";
-import Manageusers from "../Dashbord/AdminDashbord/Manageusers";
 import Allproducts from "../Products/allproducts";
 import ContactUs from "../pages/ContactUs";
 import CreateProduct from "../Dashbord/AdminDashbord/CreatProduct";
 import ProductsManagment from "../Dashbord/AdminDashbord/ProductsManagment";
+import OrderManageAdmin from "../Dashbord/AdminDashbord/OrderManageAdmin";
+import UpdateUserStatus from "../Dashbord/AdminDashbord/UpdateUserStatus";
 
 const router = createBrowserRouter([
     {
@@ -64,17 +65,21 @@ const router = createBrowserRouter([
           element:<ManageProfile />
         },
         {
-          path:'manage-users',
-          element:<Manageusers />
-
-        },
-        {
           path:'create-products',
           element:<CreateProduct />
         },
         {
           path:'products-managment',
           element:<ProductsManagment />
+        },
+        {
+          path:'order-managment',
+          element:<OrderManageAdmin />
+        },
+        {
+          path:'user-managment',
+          element:<UpdateUserStatus isdeactive={false} userId={""} email={""} />
+
         }
       ]
     }                     

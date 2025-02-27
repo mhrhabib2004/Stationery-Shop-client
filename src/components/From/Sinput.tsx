@@ -5,6 +5,7 @@ type TInputProps = {
   name: string;
   label?: string;
   placeholder?: string;
+  step?:string;
 };
 
 export default function Sinput({ type, name, label, placeholder }: TInputProps) {
@@ -32,6 +33,7 @@ export default function Sinput({ type, name, label, placeholder }: TInputProps) 
               type={type}
               id={name}
               placeholder={placeholder}
+              
               className={`w-full h-12 px-4 border ${
                 error ? "border-red-500" : "border-gray-300"
               } rounded-lg focus:outline-none focus:ring-2 ${

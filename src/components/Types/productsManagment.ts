@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 export enum Category  {
     Writing = "Writing",
     OfficeSupplies = "Office Supplies",
